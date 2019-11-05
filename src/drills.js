@@ -51,3 +51,7 @@ function addedAfterDate(daysAgo){
 }
 
 addedAfterDate(10);
+
+function totalCost({
+    
+}
