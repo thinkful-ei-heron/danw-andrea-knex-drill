@@ -5,10 +5,10 @@ const knex = require('knex');
 
 const knexInstance = knex({
   client: 'pg',
-  connection: process.env.DB_URL,
+  connection: process.env.DB_URL
 });
 
-function searchByItemName(searchTerm){
+function searchByItemName(searchTerm) {
   knexInstance
     .select('name', 'price', 'date_added', 'category', 'checked')
     .from('shopping_list')
@@ -20,7 +20,7 @@ function searchByItemName(searchTerm){
 
 // searchByItemName('fish');
 
-function paginateProducts(pageNumber){
+function paginateProducts(pageNumber) {
   const productsPerPage = 6;
   const offset = productsPerPage * (pageNumber - 1);
   knexInstance
@@ -28,14 +28,14 @@ function paginateProducts(pageNumber){
     .from('shopping_list')
     .limit(productsPerPage)
     .offset(offset)
-    .then(res =>{
+    .then(res => {
       console.log(res);
     });
 }
 
-paginateProducts(3);
+//paginateProducts(3);
 
-function addedAfterDate(daysAgo){
+function addedAfterDate(daysAgo) {
   knexInstance
     .select('name', 'price', 'date_added', 'category', 'checked')
     .where(
@@ -45,13 +45,20 @@ function addedAfterDate(daysAgo){
       knexInstance.raw(`now() - '?? days' ::INTERVAL`, daysAgo)
     )
     .from('shopping_list')
-    .then(res =>{
+    .then(res => {
       console.log(res);
     });
 }
 
-addedAfterDate(10);
+//addedAfterDate(10);
 
-function totalCost({
-    
+function totalCost() {
+  knexInstance
+    .select('category')
+    .sum('price as total')
+    .from('shopping_list')
+    .groupBy('category')
+    .then(res => console.log(res));
 }
+
+totalCost();
